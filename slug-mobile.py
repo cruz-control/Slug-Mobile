@@ -1,6 +1,7 @@
 from enum import Enum
 from time import sleep
 from adafruit_servokit import ServoKit
+import cv2
 
 
 class SlugMobile:
@@ -35,3 +36,9 @@ class SlugMobile:
 
     def set_throttle(self, throttle):
         self.DrivingServo.angle = throttle
+
+    def get_RGB(self):
+        vid = cv2.VideoCapture(0)
+        _, frame = vid.read()
+        vid.release()
+        return frame
