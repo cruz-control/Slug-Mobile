@@ -18,4 +18,4 @@ Next you can import the `SlugMobile` class from slug-mobile.py into your compute
 
 We have included the custom power distribution board we created to the `power_dist_board` folder, the schematics show how to connect the different components.
 
-![power distribution board](img/power_board.jpg)
+![power distribution board](img/power_board.png)
