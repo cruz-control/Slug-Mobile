@@ -1,0 +1,2 @@
+adafruit_servokit
+opencv-python
