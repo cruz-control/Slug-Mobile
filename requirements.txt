@@ -1,2 +1,2 @@
-adafruit_servokit
+adafruit-circuitpython-servokit
 opencv-python
