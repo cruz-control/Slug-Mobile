@@ -4,6 +4,7 @@ from adafruit_servokit import ServoKit
 import cv2
 from metavision_core.event_io import EventsIterator
 from hokuyolx import HokuyoLX
+from BMX160 import BMX160
 
 class SlugMobile:
 
@@ -28,6 +29,8 @@ class SlugMobile:
         self.event_iterator = EventsIterator(input_path="", mode="n_events", n_events=1)
 
         self.lidar = HokuyoLX()
+
+        self.imu = BMX160(1)
 
         sleep(5)
 
@@ -55,3 +58,13 @@ class SlugMobile:
     def get_distance(self):
         timestamp, scan = self.lidar.get_dist()
         return timestamp, scan
+    
+    """
+    Returns:
+        - magn: (x, y, z)
+        - gyro: (x, y, z)
+        - accel: (x, y, z)
+    """
+    def get_imu_data(self):
+        data = self.imu.get_all_data()
+        return (data[0], data[1], data[2]), (data[3], data[4], data[5]), (data[6], data[7], data[8])
