@@ -2,7 +2,7 @@ from enum import Enum
 from time import sleep
 from adafruit_servokit import ServoKit
 import cv2
-
+from metavision_core.event_io import EventsIterator
 
 class SlugMobile:
 
@@ -24,6 +24,8 @@ class SlugMobile:
         self.DrivingServo.angle = 90
         self.SteeringServo.angle = 90
 
+        self.event_iterator = EventsIterator(input_path="", mode="n_events", n_events=1)
+
         sleep(5)
 
     def num_to_range(num, inMin, inMax, outMin, outMax):
@@ -42,3 +44,7 @@ class SlugMobile:
         _, frame = vid.read()
         vid.release()
         return frame
+
+    def get_event(self):
+        event = next(self.event_iterator)
+        return event.x, event.y, event.p, event.t
