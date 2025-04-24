@@ -5,10 +5,12 @@ import cv2
 from metavision_core.event_io import EventsIterator
 from hokuyolx import HokuyoLX
 from BMX160 import BMX160
+import board
+import busio
 
 class SlugMobile:
 
-    def __init__(self, max_steering=80, max_throttle=20, i2c_address=0x60, channels=16):
+    def __init__(self, max_steering=80, max_throttle=20, i2c_address=0x41, channels=16):
         """
         max_steering: max percentage of steering angle
         max_throttle: max percentage of thrust
@@ -19,18 +21,18 @@ class SlugMobile:
         self.steering_angle = 0
         self.throttle = 0
 
-        self.servo_kit = ServoKit(address=i2c_address, channels=channels)
-        self.DrivingServo = self.servo_kit.servo[15]
+        self.servo_kit = ServoKit(i2c=busio.I2C(scl=board.SCL_1, sda=board.SDA_1), address=i2c_address, channels=channels)
+        self.DrivingServo = self.servo_kit.continuous_servo[15]
         self.SteeringServo = self.servo_kit.servo[0]
 
-        self.DrivingServo.angle = 90
+        self.DrivingServo.throttle = 0
         self.SteeringServo.angle = 90
 
-        self.event_iterator = EventsIterator(input_path="", mode="n_events", n_events=1)
+        #self.event_iterator = EventsIterator(input_path="", mode="n_events", n_events=1)
 
-        self.lidar = HokuyoLX()
+        #self.lidar = HokuyoLX()
 
-        self.imu = BMX160(1)
+        #self.imu = BMX160(1)
 
         sleep(5)
 
@@ -43,7 +45,7 @@ class SlugMobile:
         self.SteeringServo.angle = angle
 
     def set_throttle(self, throttle):
-        self.DrivingServo.angle = throttle
+        self.DrivingServo.throttle = throttle
 
     def get_RGB(self):
         vid = cv2.VideoCapture(0)
