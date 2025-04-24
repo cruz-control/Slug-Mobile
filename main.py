@@ -146,6 +146,7 @@ def main():
     
     try:
         while True:
+            controller.update()
             print(f"Mapped throttle: {num_to_range(controller.get_throttle(), -4.1, 4.1, -1, 1)}, Mapped steering: {num_to_range(controller.get_steering(), -81, 81, 0, 180)}")
             car.set_steering_angle(num_to_range(controller.get_steering(), -car.max_steering, car.max_steering, 0, 180))
             car.set_throttle(num_to_range(controller.get_throttle(), -4.1, 4.1, -1, 1))
