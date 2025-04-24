@@ -23,8 +23,8 @@ class SlugMobile:
 
         self.servo_kit = ServoKit(i2c=busio.I2C(scl=board.SCL_1, sda=board.SDA_1), address=i2c_address, channels=channels)
         self.DrivingServo = self.servo_kit.continuous_servo[15]
+        self.DrivingServo.set_pulse_width_range(1000, 2000)
         self.SteeringServo = self.servo_kit.servo[0]
-
         self.DrivingServo.throttle = 0
         self.SteeringServo.angle = 90
 
