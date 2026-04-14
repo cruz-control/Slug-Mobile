@@ -5,6 +5,8 @@ from hokuyolx import HokuyoLX
 
 from sensor import Sensor
 
+import pubsub
+
 @dataclass
 class LidarFrame:
     timestamp: int
@@ -26,6 +28,13 @@ class Lidar(Sensor):
         
         timestamp, scan = self._lidar.get_dist()
         return [timestamp] + list(scan)
+    
+    def update(self):
+        if not self.start:
+            self.start_lidar()
+
+        timestamp, scan = self._lidar.get_dist()
+        pubsub.set_topic('lidar', LidarFrame(timestamp=timestamp, distances=list(scan)))
     
     def stop(self):
         self.start = False
