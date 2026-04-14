@@ -6,9 +6,9 @@ import time
 import board
 import busio
 import adafruit_lsm9ds1
-from sensor import Sensor
+from node import Node
 
-class IMUSensor(Sensor):
+class IMUSensor(Node):
     def __init__(self):
         # Initialize I2C + IMU
         self.i2c = busio.I2C(board.SCL, board.SDA)
