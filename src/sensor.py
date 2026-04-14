@@ -1,3 +1,5 @@
+from pubsub import set_topic
+
 class Sensor:
     """
     Base class for sensors
@@ -6,12 +8,12 @@ class Sensor:
         pass
     def update(self):
         """
-        Updates the sensor if needed. Implementation is optional for sensors.
+        Updates the sensor if needed. This must be implemented, and it should call set_topic().
         """
-        pass
-    def get_frame(self):
+        raise NotImplementedError("update() needs to be implemented")
+    def set_topic(self, topic: str, value: any) -> None:
         """
-        Returns the most recent sensor frame. This must be implemented by all subclasses.
+        Calling set_topic on a sensor is the same as calling it on pubsub.
         """
-        raise NotImplementedError("get_frame() needs to be implemented")
+        set_topic(topic, value)
 
