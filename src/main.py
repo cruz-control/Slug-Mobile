@@ -11,6 +11,11 @@ stop = False
 def run_thread(node):
     global stop, loop_time
     start = time.time()
+    try:
+      node.start()
+    except Exception as e:
+        stop = True
+        raise e
     while not stop:
         try:
             node.update()
@@ -21,6 +26,7 @@ def run_thread(node):
         if end - start < loop_time:
             time.sleep(loop_time - (end-start))
         start = end
+    node.stop()
 
 threads = []
 for n in nodes:

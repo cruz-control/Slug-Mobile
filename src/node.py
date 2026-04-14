@@ -11,6 +11,10 @@ class Node:
         Updates the sensor if needed. This must be implemented, and it should call set_topic() if it is a sensor.
         """
         raise NotImplementedError("update() needs to be implemented")
+    def start(self):
+        pass
+    def stop(self):
+        pass
     def set_topic(self, topic: str, value: any) -> None:
         """
         Calling set_topic on a node is the same as calling it on pubsub.
