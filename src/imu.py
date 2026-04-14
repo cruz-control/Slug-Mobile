@@ -6,38 +6,28 @@ import time
 import board
 import busio
 import adafruit_lsm9ds1
-from sensor import Sensor
+from node import Node
 
-class IMUSensor(Sensor):
+class IMUSensor(Node):
     def __init__(self):
-        # Initialize I2C and sensor
+        # Initialize I2C + IMU
         self.i2c = busio.I2C(board.SCL, board.SDA)
         self.sensor = adafruit_lsm9ds1.LSM9DS1_I2C(self.i2c)
 
-        # Cache for latest frame
-        self._frame = None
-
     def update(self):
-        # Reads fresh data from the IMU and stores it internally.
-        accel_x, accel_y, accel_z = self.sensor.acceleration
-        gyro_x, gyro_y, gyro_z = self.sensor.gyro
-        mag_x, mag_y, mag_z = self.sensor.magnetic
-        temp = self.sensor.temperature
 
-        self._frame = {
-            "timestamp": time.time(),
-            "acceleration": (accel_x, accel_y, accel_z),  # m/s^2
-            "gyro": (gyro_x, gyro_y, gyro_z),             # rad/s
-            "magnetometer": (mag_x, mag_y, mag_z),        # gauss
-            "temperature": temp                           # °C
-        }
+        # Reads IMU data and publishes it to topics.
+        accel = self.sensor.acceleration      # (x, y, z) m/s^2
+        gyro = self.sensor.gyro               # (x, y, z) rad/s
+        mag = self.sensor.magnetic            # (x, y, z) gauss
+        temp = self.sensor.temperature        # °C
+        timestamp = time.time()
 
-    def get_frame(self):
-        """
-        Returns the most recent sensor frame.
-        """
-        if self._frame is None:
-            raise RuntimeError("IMU frame not available. Call update() first.")
-        return self._frame
+        # Publish individual topics
+        self.set_topic("imu/accel", accel)
+        self.set_topic("imu/gyro", gyro)
+        self.set_topic("imu/mag", mag)
+        self.set_topic("imu/temp", temp)
+        self.set_topic("imu/timestamp", timestamp)
 
 
