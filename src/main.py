@@ -1,7 +1,7 @@
 from node import Node
 from controller import Controller
 from motors import Motors
-frm rgb import RGB
+from rgb import RGB
 from imu import IMU
 from lidar import Lidar
 import time
