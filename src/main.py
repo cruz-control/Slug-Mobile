@@ -29,7 +29,10 @@ def run_thread(node):
                 time.sleep(loop_time - (end-start))
             start = end
     except Exception as e:
-      stop = True
+      try:
+        node.stop()
+      except:
+        pass
       raise e
     node.stop()
 
