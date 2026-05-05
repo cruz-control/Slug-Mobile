@@ -1,40 +1,24 @@
-from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 from hokuyolx import HokuyoLX
 
-from sensor import Sensor
+from node import Node
 
-import pubsub
+from pubsub import set_topic
 
-@dataclass
-class LidarFrame:
-    timestamp: int
-    distances: List[int]
-
-class Lidar(Sensor):
-
+class Lidar(Node):
     def __init__(self):
         super().__init__()
-        self._lidar: HokuyoLX()
-        self.start = False
+        self.lidar = HokuyoLX()
 
-    def start_lidar(self):
-        self.start = True
-
-    def get_frame(self) -> list:
-        if not self.start:
-            self.start_lidar()        
+    def start(self):
+        set_topic("lidar/timestamp", -1)
+        set_topic("lidar/distances", [])
         
-        timestamp, scan = self._lidar.get_dist()
-        return [timestamp] + list(scan)
-    
     def update(self):
-        if not self.start:
-            self.start_lidar()
-
         timestamp, scan = self._lidar.get_dist()
-        pubsub.set_topic('lidar', LidarFrame(timestamp=timestamp, distances=list(scan)))
+        set_topic('lidar/timestamp', timestamp)
+        set_topic('idar/distances', list(scan))
     
     def stop(self):
-        self.start = False
+        pass

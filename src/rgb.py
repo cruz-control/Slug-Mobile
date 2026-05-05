@@ -1,27 +1,21 @@
-import numpy as np
 import cv2
-import pubsub
-from sensor import Sensor
-from dataclasses import dataclass
+from pubsub import set_topic
+from node import Node
+import numpy as np
 
-class rgb(Sensor):
+class RGB(Node):
     def __init__(self):
         self.cap = cv2.VideoCapture(0)
 
+    def start(self):
+        set_topic("rgb/frame", np.zeros((1080, 1920, 3), dtype=np.uint8))
+
     def update(self):
         ret, frame = self.cap.read()
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        if not ret or frame is None:
+            return
 
-        # # Display the resulting frame
-        # cv2.imshow('frame',frame)
-        # cv2.imshow('gray',gray)
-
-        pubsub.set_topic('rgb/gray', gray)
+        set_topic('rgb/frame', frame)
 
     def stop(self):
-        # How to stop the camera in main
-        # if cv2.waitKey(20) & 0xFF == ord('q'):
-        #     break
-        # When everything done, release the capture
         self.cap.release()
-        cv2.destroyAllWindows()

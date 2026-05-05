@@ -8,11 +8,18 @@ import busio
 import adafruit_lsm9ds1
 from node import Node
 
-class IMUSensor(Node):
+class IMU(Node):
     def __init__(self):
         # Initialize I2C + IMU
         self.i2c = busio.I2C(board.SCL, board.SDA)
         self.sensor = adafruit_lsm9ds1.LSM9DS1_I2C(self.i2c)
+
+    def start(self):
+        self.set_topic("imu/accel", (0, 0, 0))
+        self.set_topic("imu/gyro", (0, 0, 0))
+        self.set_topic("imu/mag", (0, 0, 0))
+        self.set_topic("imu/temp", 0)
+        self.set_topic("imu/timestamp", -1)
 
     def update(self):
 
@@ -29,5 +36,3 @@ class IMUSensor(Node):
         self.set_topic("imu/mag", mag)
         self.set_topic("imu/temp", temp)
         self.set_topic("imu/timestamp", timestamp)
-
-

@@ -1,10 +1,13 @@
 from node import Node
 from controller import Controller
 from motors import Motors
+frm rgb import RGB
+from imu import IMU
+from lidar import Lidar
 import time
 from threading import Thread
 
-nodes = [Controller(), Motors()]
+nodes = [Controller(), Motors(), RGB(), Lidar(), IMU()]
 update_rate = 50 # Hz
 
 loop_time = 1/update_rate
