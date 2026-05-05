@@ -12,7 +12,7 @@ stop = False
 initializing = len(nodes)
 
 def run_thread(node):
-    global stop, loop_time
+    global stop, loop_time, initializing
     start = time.time()
     try:
         node.start()
