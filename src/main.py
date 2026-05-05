@@ -30,12 +30,11 @@ def run_thread(node_class):
                 time.sleep(loop_time - (end-start))
             start = end
     except Exception as e:
-      try:
+        print(f'Error in {node_class.__name__}: {e}')
+    try:
         node.stop()
-      except:
-        pass
-      raise e
-    node.stop()
+    except Exception as e:
+        printf(f'Error stopping {node_class.__name__}: {e}')
 
 threads = []
 for n in nodes:
