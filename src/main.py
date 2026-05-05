@@ -34,7 +34,7 @@ def run_thread(node_class):
     try:
         node.stop()
     except Exception as e:
-        printf(f'Error stopping {node_class.__name__}: {e}')
+        print(f'Error stopping {node_class.__name__}: {e}')
 
 threads = []
 for n in nodes:
