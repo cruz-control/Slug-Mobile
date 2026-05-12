@@ -9,7 +9,7 @@ from threading import Thread
 from logger_node import CSVLoggerNode, ImageLoggerNode, VideoLoggerNode
 
 nodes = [Controller, Motors, RGB, Lidar, IMU,
-    VideoLoggerNode("rgb/frame"), ImageLoggerNode("rgb/frame")
+    VideoLoggerNode("rgb/frame"), ImageLoggerNode("rgb/frame"), CSVLoggerNode("lidar/distances", "lidar_log.csv")
 ]
 update_rate = 50 # Hz
 
