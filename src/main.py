@@ -6,8 +6,11 @@ from imu import IMU
 from lidar import Lidar
 import time
 from threading import Thread
+from logger_node import CSVLoggerNode, ImageLoggerNode, VideoLoggerNode
 
-nodes = [Controller, Motors, RGB, Lidar, IMU]
+nodes = [Controller, Motors, RGB, Lidar, IMU,
+    VideoLoggerNode("rgb/frame"), ImageLoggerNode("rgb/frame")
+]
 update_rate = 50 # Hz
 
 loop_time = 1/update_rate
@@ -18,7 +21,11 @@ def run_thread(node_class):
     global stop, loop_time, initializing
     start = time.time()
     try:
-        node = node_class()
+        # Detect if it is a class or object
+        if isinstance(node_class, type):
+            node = node_class()
+        else:
+            node = node_class
         node.start()
         initializing -= 1
         while initializing > 0 and not stop:
