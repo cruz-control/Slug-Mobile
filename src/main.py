@@ -5,30 +5,39 @@ from rgb import RGB
 from imu import IMU
 from lidar import Lidar
 import time
-from threading import Thread
+from threading import Thread, Lock
 from logger_node import CSVLoggerNode, ImageLoggerNode, VideoLoggerNode
 
 nodes = [Controller, Motors, RGB, Lidar, IMU,
-    VideoLoggerNode("rgb/frame"), ImageLoggerNode("rgb/frame"), CSVLoggerNode("lidar/distances", "lidar_log.csv")
+    VideoLoggerNode("rgb/frame"), ImageLoggerNode("rgb/frame"),
+    CSVLoggerNode("lidar/distances", "lidar_log.csv"),
+    CSVLoggerNode(["imu/accel", "imu/gyro", "imu/mag", "imu/temp"], "imu_log.csv"),
+    CSVLoggerNode(["controller/" + x for x in Controller.get_axes() + Controller.get_buttons()], "controller_log.csv")
 ]
 update_rate = 50 # Hz
 
 loop_time = 1/update_rate
 stop = False
 initializing = len(nodes)
+initializing_lock = Lock()
 
 def run_thread(node_class):
     global stop, loop_time, initializing
     initialized = False
+    node = None
+    name = "Unknown"
     start = time.time()
     try:
         # Detect if it is a class or object
         if isinstance(node_class, type):
+            name = node_class.__name__
             node = node_class()
         else:
+            name = node_class.__class__.__name__
             node = node_class
         node.start()
-        initializing -= 1
+        with initializing_lock:
+            initializing -= 1
         initialized = True
         while initializing > 0 and not stop:
             time.sleep(loop_time)
@@ -40,13 +49,14 @@ def run_thread(node_class):
             start = end
     except Exception as e:
         if not initialized:
-            initializing -= 1
-        print(f'Error in {node_class.__name__}: {e}')
+            with initializing_lock:
+                initializing -= 1
+        print(f'Error in {name}: {e}')
     try:
         if node is not None:
             node.stop()
     except Exception as e:
-        print(f'Error stopping {node_class.__name__}: {e}')
+        print(f'Error stopping {name}: {e}')
 
 threads = []
 for n in nodes:
@@ -59,8 +69,11 @@ def main():
     while not stop:
         try:
             time.sleep(0.5)
-        except:
+        except KeyboardInterrupt:
             print()
+            stop = True
+        except Exception as e:
+            print(f'Error in main loop: {e}')
             stop = True
     for t in threads:
         t.join()

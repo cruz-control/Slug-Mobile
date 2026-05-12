@@ -5,22 +5,25 @@ from datetime import datetime
 from node import Node
 
 class CSVLoggerNode(Node):
-    def __init__(self, topic, filename):
+    def __init__(self, topics, filename):
         super().__init__()
-        self.topic = topic
+        if isinstance(topics, str):
+            self.topics = [topics]
+        else:
+            self.topics = topics
         self.filename = filename
 
         if not os.path.exists(filename):
             with open(filename, "w", newline="") as f:
                 writer = csv.writer(f)
-                writer.writerow(["timestamp", "value"])
+                writer.writerow(["timestamp"] + self.topics)
 
     def update(self):
-        value = self.get_topic(self.topic)
-        if value is not None:
+        values = [self.get_topic(topic) for topic in self.topics]
+        if any(value is not None for value in values):
             with open(self.filename, "a", newline="") as f:
                 writer = csv.writer(f)
-                writer.writerow([datetime.now().isoformat(), value])
+                writer.writerow([datetime.now().isoformat()] + [str(v).replace(",", ";") for v in values])
 
 class ImageLoggerNode(Node):
     def __init__(self, topic, folder="images"):
@@ -31,7 +34,7 @@ class ImageLoggerNode(Node):
 
     def update(self):
         frame = self.get_topic(self.topic)
-        if frame is None:
+        if frame is None or not frame.any():
             return
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
@@ -49,7 +52,7 @@ class VideoLoggerNode(Node):
 
     def update(self):
         frame = self.get_topic(self.topic)
-        if frame is None:
+        if frame is None or not frame.any():
             return
 
         if self.writer is None:

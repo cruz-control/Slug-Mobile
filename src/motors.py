@@ -9,7 +9,7 @@ Design Doc/Notes
 
 '''
 
-pwm = pigpio.pi()
+pwm = None
 
 class Motors():
     def __init__(self):
@@ -20,6 +20,9 @@ class Motors():
         self.steer_amount = 310
         self.drive_amount = 200
         self.wait_time = 7
+        if pwm is None:
+            global pwm
+            pwm = pigpio.pi()
         pwm.set_mode(self.servo, pigpio.OUTPUT)
         pwm.set_mode(self.drive_pin, pigpio.OUTPUT) 
 

@@ -10,11 +10,18 @@ class Controller(Node):
         if self.controller is not None:
             self.controller.rumble(0.1, 0.1, time)
 
+    @staticmethod
+    def get_axes():
+        return ['left_x', 'left_y', 'right_x', 'right_y', 'left_trigger', 'right_trigger']
+    @staticmethod
+    def get_buttons():
+        return ['a', 'b', 'x', 'y', 'left_bumper', 'right_bumper', 'back', 'start', 'left_stick_pressed', 'right_stick_pressed', 'guide']
+
     def __init__(self):
         super().__init__()
         self.controller = None
-        self.axes = ['left_x', 'left_y', 'right_x', 'right_y', 'left_trigger', 'right_trigger']
-        self.buttons = ['a', 'b', 'x', 'y', 'left_bumper', 'right_bumper', 'back', 'start', 'left_stick_pressed', 'right_stick_pressed', 'guide']
+        self.axes = self.get_axes()
+        self.buttons = self.get_buttons()
         set_topic('controller/rumble', self.rumble)
 
     def connect_controller(self):
