@@ -7,17 +7,18 @@ from lidar import Lidar
 import time
 from threading import Thread
 
-nodes = [Controller(), Motors(), RGB(), Lidar(), IMU()]
+nodes = [Controller, Motors, RGB, Lidar, IMU]
 update_rate = 50 # Hz
 
 loop_time = 1/update_rate
 stop = False
 initializing = len(nodes)
 
-def run_thread(node):
+def run_thread(node_class):
     global stop, loop_time, initializing
     start = time.time()
     try:
+        node = node_class()
         node.start()
         initializing -= 1
         while initializing > 0 and not stop:
@@ -29,9 +30,11 @@ def run_thread(node):
                 time.sleep(loop_time - (end-start))
             start = end
     except Exception as e:
-      stop = True
-      raise e
-    node.stop()
+        print(f'Error in {node_class.__name__}: {e}')
+    try:
+        node.stop()
+    except Exception as e:
+        print(f'Error stopping {node_class.__name__}: {e}')
 
 threads = []
 for n in nodes:
