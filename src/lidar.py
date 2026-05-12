@@ -16,9 +16,9 @@ class Lidar(Node):
         set_topic("lidar/distances", [])
         
     def update(self):
-        timestamp, scan = self._lidar.get_dist()
+        timestamp, scan = self.lidar.get_dist()
         set_topic('lidar/timestamp', timestamp)
-        set_topic('idar/distances', list(scan))
+        set_topic('lidar/distances', list(scan))
     
     def stop(self):
         pass
