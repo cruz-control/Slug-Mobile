@@ -24,15 +24,18 @@ class IMU(Node):
     def update(self):
 
         # Reads IMU data and publishes it to topics.
-        accel = self.sensor.acceleration      # (x, y, z) m/s^2
-        gyro = self.sensor.gyro               # (x, y, z) rad/s
-        mag = self.sensor.magnetic            # (x, y, z) gauss
+        accel_x, accel_y, accel_z = self.sensor.acceleration
+        accel = (accel_x, accel_y, accel_z) # (x, y, z) m/s^2
+        gyro_x, gyro_y, gyro_z = self.sensor.gyro
+        gyro = (gyro_x, gyro_y, gyro_z)              # (x, y, z) rad/s
+        mag_x, mag_y, mag_z = self.sensor.magnetic
+        mag = (mag_x, mag_y, mag_z)            # (x, y, z) gauss
         temp = self.sensor.temperature        # °C
         timestamp = time.time()
 
         # Publish individual topics
-        self.set_topic("imu/accel", accel)
-        self.set_topic("imu/gyro", gyro)
-        self.set_topic("imu/mag", mag)
+        self.set_topic("imu/accel", tuple(accel))
+        self.set_topic("imu/gyro", tuple(gyro))
+        self.set_topic("imu/mag", tuple(mag))
         self.set_topic("imu/temp", temp)
         self.set_topic("imu/timestamp", timestamp)
