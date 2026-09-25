@@ -1,2 +1,7 @@
 adafruit-circuitpython-servokit
+adafruit-circuitpython-lsm9ds1
+adafruit-blinka
 opencv-python
+pygame
+hokuyolx
+pigpio

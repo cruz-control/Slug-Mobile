@@ -1,13 +1,8 @@
-import pigpio # For PWM
+import pigpio
 import time
 import pubsub
 from pubsub import get_topic
 
-''' 
-Design Doc/Notes
-
-
-'''
 
 pwm = None
 

@@ -1,6 +1,6 @@
 # LSM9DS1 9-DOF
 # https://learn.adafruit.com/adafruit-lsm9ds1-accelerometer-plus-gyro-plus-magnetometer-9-dof-breakout/python-circuitpython
-# Using Sensor.py base class
+# Using Node.py base class
 
 import time
 import board
