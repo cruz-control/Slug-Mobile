@@ -12,7 +12,7 @@ Run the following command to install all the dependencies
 pip3 install -r requirements.txt
 ```
 
-Next you can import the `SlugMobile` class from slug-mobile.py into your computer/ jetson of choice to interact with the car.
+Next you can run `main.py` to start the code.
 
 ## Setup Car
 
@@ -23,5 +23,3 @@ Here's a link to the CAD for the sensor mount: [OnShape Link](https://cad.onshap
 ### Electrical System
 
 We have included the custom power distribution board we created to the `power_dist_board` folder, the schematics show how to connect the different components.
-
-![power distribution board](img/power_board.png)
