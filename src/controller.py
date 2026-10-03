@@ -55,3 +55,5 @@ class Controller(Node):
             return
         for i in range(len(self.axes)):
             set_topic(f'controller/{self.axes[i]}', self.controller.get_axis(i))
+        for i in range(len(self.buttons)):
+            set_topic(f'controller/{self.buttons[i]}', bool(self.controller.get_button(i)))
