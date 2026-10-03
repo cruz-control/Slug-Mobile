@@ -22,6 +22,10 @@ class Motors():
         pwm.set_mode(self.drive_pin, pigpio.OUTPUT) 
 
     def start(self):
+        # Arm ESC and set steering to center
+        pwm.set_servo_pulsewidth(self.drive_pin, self.drive_center)
+        pwm.set_servo_pulsewidth(self.servo, self.steer_center)
+        
         # For fun rumble 
         rumble = get_topic("controller/rumble")
         if rumble:
