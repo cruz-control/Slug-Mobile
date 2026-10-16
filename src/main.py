@@ -10,23 +10,22 @@ from logger_node import CSVLoggerNode, ImageLoggerNode, VideoLoggerNode
 import os
 from pathlib import Path
 
-# Change the working directory so that logs are in the right folders
-parent_dir = Path(__file__).resolve().parent.parent
-os.chdir(parent_dir)
+def get_default_nodes():
+    """
+    Returns the default list of nodes
+    Some are stored as class references to allow errors in the constructor to be caught
+    """
+    return [Controller, Motors, RGB, Lidar, IMU,
+        VideoLoggerNode("rgb/frame", "log/video.avi"), ImageLoggerNode("rgb/frame", "log/images"),
+        CSVLoggerNode("lidar/distances", "log/lidar_log.csv"),
+        CSVLoggerNode(["imu/accel", "imu/gyro", "imu/mag", "imu/temp"], "log/imu_log.csv"),
+        CSVLoggerNode(["controller/" + x for x in Controller.get_axes() + Controller.get_buttons()], "log/controller_log.csv")
+    ]
 
-# Create the list of nodes
-# Some are stored as class references to allow errors in the constructor to be caught
-nodes = [Controller, Motors, RGB, Lidar, IMU,
-    VideoLoggerNode("rgb/frame", "log/video.avi"), ImageLoggerNode("rgb/frame", "log/images"),
-    CSVLoggerNode("lidar/distances", "log/lidar_log.csv"),
-    CSVLoggerNode(["imu/accel", "imu/gyro", "imu/mag", "imu/temp"], "log/imu_log.csv"),
-    CSVLoggerNode(["controller/" + x for x in Controller.get_axes() + Controller.get_buttons()], "log/controller_log.csv")
-]
 update_rate = 50 # Hz
-
 loop_time = 1.0/update_rate
 stop = False
-initializing = len(nodes)
+initializing = 0
 initializing_lock = Lock()
 
 def run_thread(node_class):
@@ -83,12 +82,21 @@ def run_thread(node_class):
     except Exception as e:
         print(f'Error stopping {name}: {e}')
 
-threads = []
-for n in nodes:
-    threads.append(Thread(target=run_thread, args=(n,)))
 
-def main():
+def run_nodes(nodes):
     global stop
+    global initializing
+
+    stop = False
+    initializing += len(nodes)
+
+    # Change the working directory so that logs are in the right folders
+    parent_dir = Path(__file__).resolve().parent.parent
+    os.chdir(parent_dir)
+
+    threads = []
+    for n in nodes:
+        threads.append(Thread(target=run_thread, args=(n,)))
     for t in threads:
         t.start()
     while not stop:
@@ -104,4 +112,4 @@ def main():
         t.join()
 
 if __name__ == "__main__":
-    main()
+    run_nodes(get_default_nodes())
