@@ -7,3 +7,4 @@ PySDL2-dll
 pygame
 hokuyolx
 pigpio
+rpi-lgpio

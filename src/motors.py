@@ -2,11 +2,12 @@ import pigpio
 import time
 import pubsub
 from pubsub import get_topic
+from node import Node
 
 
 pwm = None
 
-class Motors():
+class Motors(Node):
     def __init__(self):
         global pwm
         self.servo = 13
