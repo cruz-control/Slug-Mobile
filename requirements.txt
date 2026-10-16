@@ -2,6 +2,8 @@ adafruit-circuitpython-servokit
 adafruit-circuitpython-lsm9ds1
 adafruit-blinka
 opencv-python
+PySDL2
+PySDL2-dll
 pygame
 hokuyolx
 pigpio
