@@ -1,6 +1,6 @@
 from node import Node
 from controller import Controller
-from motors import Motors
+from motors_pi5 import Motors
 from rgb import RGB
 from imu import IMU
 from lidar import Lidar
