@@ -19,7 +19,7 @@ def get_default_nodes():
         VideoLoggerNode("rgb/frame", "log/video.avi"), ImageLoggerNode("rgb/frame", "log/images"),
         CSVLoggerNode("lidar/distances", "log/lidar_log.csv"),
         CSVLoggerNode(["imu/accel", "imu/gyro", "imu/mag", "imu/temp"], "log/imu_log.csv"),
-        CSVLoggerNode(["controller/" + x for x in Controller.get_axes() + Controller.get_buttons()], "log/controller_log.csv")
+        CSVLoggerNode(["controller/" + x for x in Controller.axes | Controller.buttons], "log/controller_log.csv")
     ]
 
 update_rate = 50 # Hz
