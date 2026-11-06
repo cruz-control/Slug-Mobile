@@ -1,5 +1,6 @@
 from node import Node
 from controller import Controller
+from followWall import FollowWall
 from motors_pi5 import Motors
 from rgb import RGB
 from imu import IMU
@@ -15,7 +16,7 @@ def get_default_nodes():
     Returns the default list of nodes
     Some are stored as class references to allow errors in the constructor to be caught
     """
-    return [Controller, Motors, RGB, Lidar, IMU,
+    return [FollowWall, Motors, RGB, Lidar, IMU,
         VideoLoggerNode("rgb/frame", "log/video.avi"), ImageLoggerNode("rgb/frame", "log/images"),
         CSVLoggerNode("lidar/distances", "log/lidar_log.csv"),
         CSVLoggerNode(["imu/accel", "imu/gyro", "imu/mag", "imu/temp"], "log/imu_log.csv"),

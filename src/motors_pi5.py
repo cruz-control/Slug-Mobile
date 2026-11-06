@@ -29,29 +29,13 @@ class Motors(Node):
             rumble(self.wait_time)
         time.sleep(self.wait_time)
 
-    def clamp(self, x, a, b):
-        return min(b, max(a, x))
-
     def update(self): 
         # Get controller input
-        x = get_topic('controller/right_x')
-        y = -get_topic('controller/left_y')
+        steer = get_topic('motors/steer')
+        drive = get_topic('motors/drive')
 
-        # Use quadratic scaling for easier control at low speeds
-        x *= abs(x)
-        y *= abs(y)
-
-        # Calculate pulse width and reduce dead zone
-        y2 = self.drive_center + self.drive_amount * y
-        if y > 0:
-            y2 += 15
-        else:
-            y2 -= 15
-        
-        # Clamp y2 in the allowed range and set pulse widths
-        y2 = self.clamp(y2, 1100, 1900) 
-        self.drive_pwm.change_duty_cycle(y2 / 20000 * 100)
-        self.servo_pwn.change_duty_cycle((self.steer_center + self.steer_amount * x) / 20000 * 100)
+        self.drive_pwm.change_duty_cycle((self.drive_center + self.drive_amount * drive) / 20000 * 100)
+        self.servo_pwn.change_duty_cycle((self.steer_center + self.steer_amount * steer) / 20000 * 100)
 
     def stop(self):
         self.drive_pwm.change_duty_cycle(self.drive_center / 20000 * 100)

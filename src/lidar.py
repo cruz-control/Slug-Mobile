@@ -12,8 +12,10 @@ class Lidar(Node):
         self.lidar = HokuyoLX()
 
     def start(self):
+        angles = self.lidar.get_angles()
         set_topic("lidar/timestamp", -1)
         set_topic("lidar/distances", [])
+        set_topic("lidar/angles", list(angles))
         
     def update(self):
         timestamp, scan = self.lidar.get_dist()
