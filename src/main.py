@@ -1,6 +1,6 @@
 from node import Node
 from controller import Controller
-from followWall import FollowWall
+from follow_wall import FollowWall
 from motors_pi5 import Motors
 from rgb import RGB
 from imu import IMU
