@@ -1,7 +1,10 @@
+# Hide the "Hello from the pygame community" message
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "1"
+
 import pygame
 from pygame._sdl2 import controller
 import time
-import csv
 from node import Node
 from pubsub import set_topic
 
@@ -47,7 +50,7 @@ class Controller(Node):
             for i in range(controller.get_count()):
                 if controller.is_controller(i):
                     self.controller = controller.Controller(i)
-                    print(f'Joystick connected: {self.controller.get_name()}')
+                    print(f'Joystick connected: {self.controller.name}')
                     break
         elif controller.get_count() == 0 and self.controller is not None:
             print('Joystick disconnected')
